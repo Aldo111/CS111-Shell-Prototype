@@ -1,0 +1,70 @@
+CS 111, Lab Assignment 1C (1A and 1B included):
+
+Team Members:
+
+     Jason Zhang (UID: 204-147-907)
+     Adarsh Sinha (UID : 404-309-381)
+     	    -Lab 1C, both
+
+	
+General Approach:
+
+	in execute-command.c:
+	for SIMPLE_COMMANDS:
+	use clock_gettime() system call with CLOCK_REALTIME as the clock id
+	use gettimeofday() to get the time since epoch
+	use get_rusage with the RUSAGE_CHILDREN as the id
+
+	converted the seconds into the correct format:
+	nanoseconds were converted into seconds using a double datatype
+	microseconds were also converted into seconds using a double datatype
+
+	use fopen()  and then print the information into the filepointer
+
+	for PIPE_COMMANDS:
+	called a function that implements the above profiling.
+	
+	for SHELL:
+	used a separate function to profile that is similar to the one used for pipe commands. The flags RUSAGE_SELF was used instead of RUSAGE_CHILDREN.
+
+	other COMMANDS did not fork() and therefore, did not create child processes that are profiled.
+	
+Answers to Questions:
+
+	1. Yes, the log output can sometimes be out of order because it depends on the time that the process actually writes the line to the log. for example, in a pip command, if many processes are running in parallel, then one process may write to the log before the other, despite the latter finishing sooner. This is due to the overhead associated with logging.
+
+	2 NO, not in our case when we are running on a single processor. However, if run on a processor that exploits parallelism, then independent processes/threads can be run to reduce the real time to less than the sum of user and system times.
+
+	3. Yes, systems susceptible to the Year 2038 problem (i.e. 32 bit systems) can receive negative values from time_t data types.
+
+	4. In our test case, we have a massive pipeline tree. In this case, many processes are writing to the log file in parallel, which can create race conditions. However, the fprintf () function writes in finite buffers, which aren't interleaved.
+	   
+	   
+Test Cases:
+
+     MAKE CHECK RUNS: test1c-ok.sh
+
+     IN FOLDER:
+     	script.sh (sorts a large file with random numbers)
+	bigfile (large file with random numbers)
+	sortedfile (sorted numbers in this file)
+
+	-tested using a large file and sort command
+	-tested simple exec commands
+	-tested echo command
+	-tested subshell, and nested subshell
+	-tested if command and nested if command
+	-tested until and while command and nested until and while commands
+	-tested pipeline and sequence commands
+	-tested nested if, until, while, subshell, pipeline and sequence commands
+	
+    
+Known Limitations:
+      -Some potential memory leaks
+      -nested subshells may have errors with some newline/semicolon combinations
+      -some script files will have residual/anamolous white spaces that can hide illegal characters. Although the normal shell ignores this, our shell will falg them as illegal characters
+
+      THE BROKEN SCRIPT IS PROVIDED BELOW:
+
+      ls | sort -n
+      
