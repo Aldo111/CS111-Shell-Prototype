@@ -6,6 +6,34 @@ Team Members:
      Adarsh Sinha (UID : 404-309-381)
      	    -Lab 1C, both
 
+LAB 1A README:
+-----------
+
+	    
+	    
+General Approach:
+
+	-Used a Stack with Doubley-Linked List Nodes as elements to handle nesting of different types of cases and commands
+	
+	-Recursive 'evaluate_command()' function that recursively creates a tree of commands using the command struct, and returns it 
+	  to a loop in make_command_stream(..) to be passed into our command stream, and iterates the loop for the next command to be created
+	    
+	    -Flags used to help handle certain corner cases such as ;); subshell termination.
+	    
+Test Cases:
+
+     -All test cases in test-t-ok handled correctly.
+     -All test cases in test-t-bad handled correctly too.
+     
+Known Limitations:
+      -Some potential memory leaks
+
+
+
+While this is our submission for Lab1A, we will continue to improve upon it in Lab 1B and 1C.
+      
+
+-----------
 	
 General Approach:
 
